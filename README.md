@@ -1,3 +1,70 @@
+1. How did you implement multi-tenancy in NestJS?
+
+I implemented multi-tenancy by separating data using organizationId.
+
+Each user belongs to one organization. Every request sends the organizationId in the header. I store this organizationId in all tables like Issue and ActivityLog.
+Whenever I fetch or update data, I always check the organizationId.
+
+Because of this, users from one organization cannot see or change data of another organization.
+
+2. Where does authorization logic live and why?
+
+Authorization logic is written inside the service, not the controller.
+
+Controller only receives the request and sends it to the service.
+In the service, I check the user role.
+
+For example:
+
+Only ADMIN can update issue status
+
+Only ADMIN can delete issues
+
+This makes the application more secure and avoids mistakes in future.
+
+3. How do you prevent cross-organization data leaks?
+
+I prevent data leaks by checking organizationId every time.
+
+Steps I follow:
+
+Every table has organizationId
+
+Every database query filters by organizationId
+
+If organizationId does not match, data is not returned
+
+Even if someone tries to use another issue ID, they will not get the data.
+
+4. What would need to change if the system grows very large?
+
+If the system grows very large:
+
+SQLite will be changed to PostgreSQL
+
+Pagination will be added for large data
+
+Indexes will be added for better performance
+
+Activity logs will be handled in background
+
+The basic design will stay the same.
+
+5. What features did you skip and why?
+
+Some features were skipped because of limited time:
+
+Login and authentication
+
+Automated testing
+
+Pagination and filtering
+
+Deployment setup
+
+I focused more on backend logic, security, and correct architecture.
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
